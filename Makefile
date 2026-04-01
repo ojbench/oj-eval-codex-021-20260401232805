@@ -1,5 +1,5 @@
-CXX := g++-13
-CXXFLAGS := -std=gnu++17 -O2 -pipe -static -s
+CXX := g++
+CXXFLAGS := -std=gnu++17 -O2 -pipe -s
 
 all: code
 
@@ -9,4 +9,3 @@ code: main.cpp
 .PHONY: clean
 clean:
 	rm -f code *.o
-
