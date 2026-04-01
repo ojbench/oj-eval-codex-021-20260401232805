@@ -48,36 +48,17 @@ int main(){
     for(int i=0;i<n;++i){
         yperm[i] = yc[ord[i]];
     }
-    // Fenwick helpers
-    struct BIT{
-        int n; vector<long long> t;
-        BIT(int n=0):n(n),t(n+1,0){}
-        void add(int i,long long v){ for(i++; i<=n; i+=i&-i) t[i]+=v; }
-        long long sumPrefix(int i){ long long s=0; for(i++; i>0; i-=i&-i) s+=t[i]; return s; }
-        long long sumRange(int l,int r){ if(r<l) return 0; return sumPrefix(r) - (l?sumPrefix(l-1):0); }
-    };
-
-    // Compute L[j]
-    vector<long long> L(n,0), R(n,0);
-    BIT bit(n);
+    // Exact O(n^2) for correctness (good for small/medium n)
+    long long ans = 0;
     for(int j=0;j<n;++j){
-        int v = yperm[j];
-        L[j] = (v>0) ? bit.sumPrefix(v-1) : 0;
-        bit.add(v, 1);
+        int cur = -1;
+        for(int i=j-1;i>=0;--i){
+            if(yperm[i] < yperm[j] && yperm[i] > cur){
+                ++ans;
+                cur = yperm[i];
+            }
+        }
     }
-    // Compute R[j]
-    bit = BIT(n);
-    for(int j=n-1;j>=0;--j){
-        int v = yperm[j];
-        R[j] = bit.sumRange(v+1, n-1);
-        bit.add(v, 1);
-    }
-    long long A = 0, T = 0;
-    for(int j=0;j<n;++j){
-        A += L[j];
-        T += L[j] * R[j];
-    }
-    long long ans = A - T;
     cout << ans << "\n";
     return 0;
 }
